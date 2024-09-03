@@ -178,6 +178,10 @@ vim.keymap.set('x', '<leader>p', '"_dP')
 -- Use tree view in netrw by default
 vim.g.netrw_liststyle = 3
 
+vim.opt.foldenable = true
+vim.opt.foldlevel = 99
+vim.opt.foldmethod = 'indent'
+
 -- END Carlton's custom keymaps
 
 -- Diagnostic keymaps
