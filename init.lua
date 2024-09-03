@@ -175,6 +175,9 @@ vim.keymap.set('n', '<C-b>', '<C-b>zz')
 -- Keep copied text when replacing selected text
 vim.keymap.set('x', '<leader>p', '"_dP')
 
+-- Use tree view in netrw by default
+vim.g.netrw_liststyle = 3
+
 -- END Carlton's custom keymaps
 
 -- Diagnostic keymaps
