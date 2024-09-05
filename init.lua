@@ -372,12 +372,32 @@ require('lazy').setup({
 
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
+
+      -- Carlton's function for pasting into telescope search input
+      local function paste_into_search()
+        -- Get clipboard content from the '+' register
+        local clipboard_content = vim.fn.getreg '+'
+        -- Strip trailing newlines because they break the search
+        clipboard_content = clipboard_content:gsub('\n+$', '')
+        local search_input = require('telescope.actions.state').get_current_picker(vim.api.nvim_get_current_buf())
+        local prompt_text = search_input:_get_prompt()
+        -- Use Telescope's API to append the content at the end of the input prompt
+        search_input:set_prompt(prompt_text .. clipboard_content)
+      end
       require('telescope').setup {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
-        --
+
         defaults = {
           file_ignore_patterns = { '%.csv$', '%.svg$' },
+          mappings = {
+            i = {
+              ['<C-p>'] = paste_into_search,
+            },
+            n = {
+              ['<C-p>'] = paste_into_search,
+            },
+          },
         },
         -- pickers = {}
         extensions = {
