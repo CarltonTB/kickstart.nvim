@@ -20,4 +20,6 @@ return {
   },
   -- For autoclosing quote and bracket pairs
   { 'm4xshen/autoclose.nvim', opts = {} },
+  -- Githup copilot
+  { 'github/copilot.vim' },
 }
