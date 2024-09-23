@@ -22,4 +22,21 @@ return {
   { 'm4xshen/autoclose.nvim', opts = {} },
   -- Githup copilot
   { 'github/copilot.vim' },
+  -- For showing git blame messages
+  {
+    'f-person/git-blame.nvim',
+    lazy = false,
+    config = function()
+      -- Hide git blame messages on startup
+      vim.cmd 'GitBlameToggle'
+    end,
+    keys = {
+      { '<leader>gb', ':GitBlameToggle<CR>', desc = 'Toggle Git Blame' },
+      { '<leader>gbf', ':GitBlameOpenFileURL<CR>', desc = 'Open File URL' },
+      { '<leader>gbc', ':GitBlameOpenCommitURL<CR>', desc = 'Open Commit URL' },
+    },
+    opts = {
+      virtual_text_column = 1,
+    },
+  },
 }
