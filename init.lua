@@ -402,7 +402,7 @@ require('lazy').setup({
         --  All the info you're looking for is in `:help telescope.setup()`
 
         defaults = {
-          file_ignore_patterns = { '%.csv$', '%.svg$' },
+          file_ignore_patterns = { '%.csv$', '%.svg$', '%.png$', '.jpg$' },
           mappings = {
             i = {
               ['<C-p>'] = paste_into_search,
