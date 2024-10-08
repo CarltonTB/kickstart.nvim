@@ -412,7 +412,17 @@ require('lazy').setup({
             },
           },
         },
-        -- pickers = {}
+        pickers = {
+          live_grep = {
+            additional_args = { '--hidden' },
+          },
+          grep_string = {
+            additional_args = { '--hidden' },
+          },
+          find_files = {
+            hidden = true,
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
