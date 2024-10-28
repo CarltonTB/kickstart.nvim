@@ -175,6 +175,18 @@ vim.keymap.set('n', '<C-b>', '<C-b>zz')
 -- Keep copied text when replacing selected text
 vim.keymap.set('x', '<leader>p', '"_dP')
 
+-- Insert breakpoint below current line
+local function insert_breakpoint()
+  local filetype = vim.bo.filetype
+  if filetype == 'python' then
+    vim.cmd 'normal! obreakpoint()'
+  elseif filetype == 'javascript' or filetype == 'typescript' then
+    vim.cmd 'normal! odebugger;'
+  end
+end
+
+vim.keymap.set('n', '<leader>b', insert_breakpoint, { desc = 'Insert [B]reakpoint' })
+
 -- Use regular list view in netrw by default
 vim.g.netrw_liststyle = 0
 
