@@ -447,6 +447,35 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
+      -- Carlton's custom keymaps for grepping in specific file types
+      vim.keymap.set('n', '<leader>spg', function()
+        builtin.live_grep {
+          prompt_title = 'Live Grep in Python Files',
+          additional_args = { '--type', 'python' },
+        }
+      end, { desc = '[S]earch by [P]ython [G]rep' })
+
+      vim.keymap.set('n', '<leader>sjg', function()
+        builtin.live_grep {
+          prompt_title = 'Live Grep in JS/TS Files',
+          additional_args = { '--type', 'js', '--type', 'ts' },
+        }
+      end, { desc = '[S]earch by [J]avaScript [G]rep' })
+
+      vim.keymap.set('n', '<leader>shg', function()
+        builtin.live_grep {
+          prompt_title = 'Live Grep in HTML Files',
+          additional_args = { '--type', 'html' },
+        }
+      end, { desc = '[S]earch by [H]TML [G]rep' })
+
+      vim.keymap.set('n', '<leader>scg', function()
+        builtin.live_grep {
+          prompt_title = 'Live Grep in CSS Files',
+          additional_args = { '--type', 'css' },
+        }
+      end, { desc = '[S]earch by [C]SS [G]rep' })
+
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
