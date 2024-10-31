@@ -196,19 +196,6 @@ vim.opt.foldmethod = 'indent'
 
 -- END Carlton's custom keymaps
 
--- START Carlton's custom functions
-local check_and_run_yc_eslint = function()
-  local file_path = vim.api.nvim_buf_get_name(0)
-  local filetype = vim.bo.filetype
-  local is_ycharts_repo = string.find(file_path, '/sites/ycharts/')
-  if is_ycharts_repo and (filetype == 'typescript' or filetype == 'javascript') then
-    vim.cmd 'w'
-    vim.cmd 'silent !node /sites/ycharts/node_modules/eslint/bin/eslint.js --config /sites/ycharts/confs/developers/.eslintrc.js --fix %'
-    vim.cmd 'edit! %'
-  end
-end
--- END Carlton's custom functions
-
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
@@ -693,6 +680,7 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
         tsserver = {},
+        eslint = {},
         angularls = {
           filetypes = { 'typescript', 'html', 'typescriptreact', 'typescript.tsx' },
           root_dir = require('lspconfig').util.root_pattern('tsconfig.json', '.git'),
@@ -753,7 +741,6 @@ require('lazy').setup({
         '<leader>f',
         function()
           require('conform').format { async = true, lsp_fallback = true }
-          check_and_run_yc_eslint()
         end,
         mode = '',
         desc = '[F]ormat buffer',
@@ -763,11 +750,10 @@ require('lazy').setup({
       log_level = vim.log.levels.DEBUG,
       notify_on_error = false,
       format_on_save = function(bufnr)
-        check_and_run_yc_eslint()
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true, typescript = true, javascript = true, html = true }
+        local disable_filetypes = { c = true, cpp = true, html = true }
         return {
           timeout_ms = 500,
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
