@@ -683,18 +683,18 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {
-          capabilities = {
-            documentFormattingProvider = false,
-            documentRangeFormattingProvider = false,
-          },
-        },
+        -- tsserver = {
+        --   capabilities = {
+        --     documentFormattingProvider = false,
+        --     documentRangeFormattingProvider = false,
+        --   },
+        -- },
         eslint = {},
         angularls = {
           filetypes = { 'typescript', 'html', 'typescriptreact', 'typescript.tsx' },
           root_dir = require('lspconfig').util.root_pattern('tsconfig.json', '.git'),
         },
-
+        bashls = {},
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
