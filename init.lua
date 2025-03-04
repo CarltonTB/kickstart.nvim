@@ -405,6 +405,8 @@ require('lazy').setup({
           mappings = {
             i = {
               ['<C-p>'] = paste_into_search,
+              ['<Up>'] = require('telescope.actions').cycle_history_prev,
+              ['<Down>'] = require('telescope.actions').cycle_history_next,
             },
             n = {
               ['<C-p>'] = paste_into_search,
