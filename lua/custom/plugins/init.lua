@@ -42,11 +42,22 @@ return {
   -- For file exploration and editing
   {
     'stevearc/oil.nvim',
-    opts = {},
     -- Optional dependencies
     dependencies = { { 'echasnovski/mini.icons', opts = {} } },
     -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
     -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
     lazy = false,
+    config = function()
+      require('oil').setup {
+        default_file_explorer = true,
+        view_options = {
+          show_hidden = true,
+        },
+      }
+      -- Make Ex command to open oil in the current file's directory
+      vim.api.nvim_create_user_command('Ex', function()
+        require('oil').open(vim.fn.expand '%:p:h')
+      end, { desc = "Open oil in the current file's directory" })
+    end,
   },
 }
