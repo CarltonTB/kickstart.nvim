@@ -53,6 +53,15 @@ return {
         view_options = {
           show_hidden = true,
         },
+        keymaps = {
+          ['<C-x>'] = { 'actions.select', opts = { horizontal = true } },
+
+          -- disable h and l keymaps because they are used for navigating between tmux windows
+          ['<C-h>'] = false,
+          ['<C-l>'] = false,
+
+          ['<leader>r'] = 'actions.refresh',
+        },
       }
       -- Make Ex command to open oil in the current file's directory
       vim.api.nvim_create_user_command('Ex', function()
