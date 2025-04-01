@@ -69,4 +69,20 @@ return {
       end, { desc = "Open oil in the current file's directory" })
     end,
   },
+  -- For beautiful code screenshots
+  {
+    'michaelrommel/nvim-silicon.nvim',
+    url = 'git@github.com:michaelrommel/nvim-silicon.git',
+    lazy = true,
+    cmd = 'Silicon',
+    main = 'nvim-silicon',
+    opts = {
+      font = 'JetBrains Mono=16',
+      theme = 'Visual Studio Dark+',
+      background = '#0282E8',
+      to_clipboard = true,
+      pad_horiz = 20,
+      pad_vert = 20,
+    },
+  },
 }
