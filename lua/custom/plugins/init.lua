@@ -69,7 +69,7 @@ return {
       end, { desc = "Open oil in the current file's directory" })
     end,
   },
-  -- For beautiful code screenshots
+  -- For code screenshots
   {
     'michaelrommel/nvim-silicon.nvim',
     url = 'git@github.com:michaelrommel/nvim-silicon.git',
@@ -79,9 +79,16 @@ return {
     opts = {
       font = 'JetBrains Mono=16',
       theme = 'Visual Studio Dark+',
+      -- YC blue
       background = '#0282E8',
       to_clipboard = true,
       pad_horiz = 20,
+      window_title = function()
+        -- Get path to current file
+        local filepath = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()), ':p')
+        filepath = string.gsub(filepath, '/Users/carltonbrady', '~')
+        return filepath
+      end,
       pad_vert = 20,
     },
   },
