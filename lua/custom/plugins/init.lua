@@ -21,7 +21,7 @@ return {
   -- For autoclosing quote and bracket pairs
   -- { 'm4xshen/autoclose.nvim', opts = {} },
   -- Githup copilot
-  { 'github/copilot.vim' },
+  -- { 'github/copilot.vim' },
   -- For showing git blame messages
   {
     'f-person/git-blame.nvim',
