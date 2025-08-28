@@ -4,7 +4,7 @@
 -- See the kickstart.nvim README for more information
 return {
   -- For vim-like navigation between tmux panes and neovim
-  { 'christoomey/vim-tmux-navigator', lazy = false },
+  -- { 'christoomey/vim-tmux-navigator', lazy = false },
   {
     -- For autoclosing HTML tags
     'windwp/nvim-ts-autotag',
@@ -90,6 +90,13 @@ return {
         return filepath
       end,
       pad_vert = 20,
+    },
+    -- To break bad habits
+    {
+      'm4xshen/hardtime.nvim',
+      lazy = false,
+      dependencies = { 'MunifTanjim/nui.nvim' },
+      opts = {},
     },
   },
 }
