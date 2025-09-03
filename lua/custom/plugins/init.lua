@@ -91,12 +91,5 @@ return {
       end,
       pad_vert = 20,
     },
-    -- To break bad habits
-    {
-      'm4xshen/hardtime.nvim',
-      lazy = false,
-      dependencies = { 'MunifTanjim/nui.nvim' },
-      opts = {},
-    },
   },
 }
