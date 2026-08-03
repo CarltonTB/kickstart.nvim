@@ -928,16 +928,17 @@ require('lazy').setup({
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     -- 'folke/tokyonight.nvim',
-    -- 'catppuccin/nvim',
-    'projekt0n/github-nvim-theme',
+    -- 'projekt0n/github-nvim-theme',
+    'catppuccin/nvim',
+    name = 'catppuccin',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'github_dark', 'github_dark_dimmed',
-      -- 'github_dark_high_contrast', 'github_light', or 'github_light_default'.
-      -- vim.cmd.colorscheme 'catppuccin-frappe'
-      vim.cmd.colorscheme 'github_light'
+      -- any other, such as 'catppuccin-latte', 'catppuccin-frappe',
+      -- 'catppuccin-macchiato', or 'catppuccin-mocha'.
+      -- vim.cmd.colorscheme 'github_light'
+      vim.cmd.colorscheme 'catppuccin-latte'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
