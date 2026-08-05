@@ -929,46 +929,12 @@ require('lazy').setup({
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     -- 'folke/tokyonight.nvim',
     -- 'kepano/flexoki-neovim',
-    -- 'catppuccin/nvim',
-    'projekt0n/github-nvim-theme',
+    -- 'projekt0n/github-nvim-theme',
+    'catppuccin/nvim',
+    name = 'catppuccin',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
-      -- Match Ghostty's 'Github' terminal theme (bg #f4f4f4, muted ANSI palette)
-      -- instead of the plugin's default Primer colors.
-      require('github-theme').setup {
-        palettes = {
-          github_light = {
-            canvas = { default = '#f4f4f4' },
-            fg = { default = '#3e3e3e' },
-          },
-        },
-        specs = {
-          github_light = {
-            sel0 = '#a9c1e2',
-            syntax = {
-              builtin0 = '#2e6cba',
-              builtin1 = '#970b16',
-              builtin2 = '#2e6cba',
-              comment = '#666666',
-              conditional = '#970b16',
-              const = '#2e6cba',
-              field = '#2e6cba',
-              func = '#003e8a',
-              keyword = '#970b16',
-              number = '#2e6cba',
-              operator = '#3e3e3e',
-              preproc = '#970b16',
-              regex = '#07962a',
-              statement = '#970b16',
-              string = '#07962a',
-              tag = '#003e8a',
-              type = '#e94691',
-            },
-          },
-        },
-      }
-
-      vim.cmd.colorscheme 'github_light'
+      vim.cmd.colorscheme 'catppuccin-frappe'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
