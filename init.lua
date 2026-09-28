@@ -661,6 +661,22 @@ require('lazy').setup({
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
+      -- Deno ships its own language server; use the existing runtime outside Mason.
+      local util = require 'lspconfig.util'
+      local deno_root = util.root_pattern('deno.json', 'deno.jsonc')
+      require('lspconfig').denols.setup {
+        cmd = { vim.fn.expand '~/.deno/bin/deno', 'lsp' },
+        capabilities = capabilities,
+        root_dir = deno_root,
+        single_file_support = false,
+        settings = {
+          deno = {
+            enable = true,
+            lint = true,
+          },
+        },
+      }
+
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --
@@ -671,6 +687,15 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+        ts_ls = {
+          root_dir = function(fname)
+            if deno_root(fname) then
+              return nil
+            end
+            return util.root_pattern('tsconfig.json', 'jsconfig.json', 'package.json', '.git')(fname)
+          end,
+          single_file_support = false,
+        },
         -- clangd = {},
         -- gopls = {},
         pyright = {
@@ -750,18 +775,24 @@ require('lazy').setup({
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-      require('mason-lspconfig').setup {
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for tsserver)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
-      }
+      -- Apply our overrides explicitly; Mason v2 no longer supports setup handlers.
+      local mason_lspconfig = require 'mason-lspconfig'
+      mason_lspconfig.setup { automatic_enable = false }
+      local configured_servers = vim.tbl_keys(servers)
+      for _, server_name in ipairs(mason_lspconfig.get_installed_servers()) do
+        if
+          not vim.tbl_contains(configured_servers, server_name)
+          and server_name ~= 'denols'
+          and #vim.api.nvim_get_runtime_file('lua/lspconfig/configs/' .. server_name .. '.lua', false) > 0
+        then
+          table.insert(configured_servers, server_name)
+        end
+      end
+      for _, server_name in ipairs(configured_servers) do
+        local server = servers[server_name] or {}
+        server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+        require('lspconfig')[server_name].setup(server)
+      end
     end,
   },
 
@@ -804,8 +835,18 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        typescript = { 'prettier' },
-        javascript = { 'prettier' },
+        typescript = function(bufnr)
+          if vim.fs.root(bufnr, { 'deno.json', 'deno.jsonc' }) then
+            return {} -- Use Deno through the existing LSP formatting fallback.
+          end
+          return { 'prettier' }
+        end,
+        javascript = function(bufnr)
+          if vim.fs.root(bufnr, { 'deno.json', 'deno.jsonc' }) then
+            return {} -- Use Deno through the existing LSP formatting fallback.
+          end
+          return { 'prettier' }
+        end,
       },
       formatters = {},
     },
