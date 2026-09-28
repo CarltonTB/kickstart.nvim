@@ -715,7 +715,7 @@ require('lazy').setup({
         eslint = {},
         angularls = {
           filetypes = { 'typescript', 'html', 'typescriptreact', 'typescript.tsx' },
-          root_dir = require('lspconfig').util.root_pattern('tsconfig.json', '.git'),
+          root_dir = require('lspconfig').util.root_pattern('angular.json'),
         },
         bashls = {},
         lua_ls = {
