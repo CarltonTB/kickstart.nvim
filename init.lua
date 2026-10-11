@@ -661,22 +661,6 @@ require('lazy').setup({
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
-      -- Deno ships its own language server; use the existing runtime outside Mason.
-      local util = require 'lspconfig.util'
-      local deno_root = util.root_pattern('deno.json', 'deno.jsonc')
-      require('lspconfig').denols.setup {
-        cmd = { vim.fn.expand '~/.deno/bin/deno', 'lsp' },
-        capabilities = capabilities,
-        root_dir = deno_root,
-        single_file_support = false,
-        settings = {
-          deno = {
-            enable = true,
-            lint = true,
-          },
-        },
-      }
-
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --
@@ -687,16 +671,8 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        ts_ls = {
-          root_dir = function(fname)
-            if deno_root(fname) then
-              return nil
-            end
-            return util.root_pattern('tsconfig.json', 'jsconfig.json', 'package.json', '.git')(fname)
-          end,
-          single_file_support = false,
-        },
-        -- clangd = {},
+        ts_ls = {},
+        clangd = {},
         -- gopls = {},
         pyright = {
           settings = {
@@ -782,7 +758,6 @@ require('lazy').setup({
       for _, server_name in ipairs(mason_lspconfig.get_installed_servers()) do
         if
           not vim.tbl_contains(configured_servers, server_name)
-          and server_name ~= 'denols'
           and #vim.api.nvim_get_runtime_file('lua/lspconfig/configs/' .. server_name .. '.lua', false) > 0
         then
           table.insert(configured_servers, server_name)
@@ -835,18 +810,8 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        typescript = function(bufnr)
-          if vim.fs.root(bufnr, { 'deno.json', 'deno.jsonc' }) then
-            return {} -- Use Deno through the existing LSP formatting fallback.
-          end
-          return { 'prettier' }
-        end,
-        javascript = function(bufnr)
-          if vim.fs.root(bufnr, { 'deno.json', 'deno.jsonc' }) then
-            return {} -- Use Deno through the existing LSP formatting fallback.
-          end
-          return { 'prettier' }
-        end,
+        typescript = { 'prettier' },
+        javascript = { 'prettier' },
       },
       formatters = {},
     },
@@ -1026,7 +991,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'make', 'markdown', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
