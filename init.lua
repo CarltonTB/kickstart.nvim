@@ -202,8 +202,12 @@ vim.opt.shiftwidth = 4
 -- END Carlton's custom keymaps
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
+vim.keymap.set('n', '[d', function()
+  vim.diagnostic.jump { count = -1, float = true }
+end, { desc = 'Go to previous [D]iagnostic message' })
+vim.keymap.set('n', ']d', function()
+  vim.diagnostic.jump { count = 1, float = true }
+end, { desc = 'Go to next [D]iagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
@@ -1003,6 +1007,19 @@ require('lazy').setup({
       local ts = require 'nvim-treesitter'
       ts.install { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'make', 'markdown', 'vim', 'vimdoc' }
 
+      local function start(buf, lang)
+        if not vim.api.nvim_buf_is_valid(buf) then
+          return
+        end
+        vim.treesitter.start(buf, lang)
+        -- Ruby depends on vim's regex highlighting for indent rules
+        if lang == 'ruby' then
+          vim.bo[buf].syntax = 'ON'
+        else
+          vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
+      end
+
       vim.api.nvim_create_autocmd('FileType', {
         group = vim.api.nvim_create_augroup('kickstart-treesitter', { clear = true }),
         callback = function(args)
@@ -1011,19 +1028,17 @@ require('lazy').setup({
           if not lang then
             return
           end
-          if not vim.treesitter.language.add(lang) then
-            -- Autoinstall languages that are not installed (highlighting starts next time the file is opened)
-            if vim.tbl_contains(ts.get_available(), lang) then
-              ts.install(lang)
-            end
-            return
-          end
-          vim.treesitter.start(buf, lang)
-          -- Ruby depends on vim's regex highlighting for indent rules
-          if lang == 'ruby' then
-            vim.bo[buf].syntax = 'ON'
-          else
-            vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          if vim.tbl_contains(ts.get_installed(), lang) then
+            start(buf, lang)
+          elseif vim.tbl_contains(ts.get_available(), lang) then
+            -- Autoinstall languages that are not installed
+            ts.install(lang):await(function(err)
+              if not err then
+                vim.schedule(function()
+                  start(buf, lang)
+                end)
+              end
+            end)
           end
         end,
       })
